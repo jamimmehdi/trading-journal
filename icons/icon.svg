@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="arrowGrad" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#5b8def"/>
+      <stop offset="1" stop-color="#7fd8c8"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="100" fill="#0b0e14"/>
+  <rect x="108" y="292" width="42" height="118" rx="7" fill="#ef5350"/>
+  <line x1="129" y1="266" x2="129" y2="432" stroke="#ef5350" stroke-width="7" stroke-linecap="round"/>
+  <rect x="190" y="236" width="42" height="150" rx="7" fill="#26a69a"/>
+  <line x1="211" y1="206" x2="211" y2="404" stroke="#26a69a" stroke-width="7" stroke-linecap="round"/>
+  <rect x="272" y="184" width="42" height="140" rx="7" fill="#26a69a"/>
+  <line x1="293" y1="152" x2="293" y2="342" stroke="#26a69a" stroke-width="7" stroke-linecap="round"/>
+  <rect x="354" y="126" width="42" height="126" rx="7" fill="#26a69a"/>
+  <line x1="375" y1="96" x2="375" y2="270" stroke="#26a69a" stroke-width="7" stroke-linecap="round"/>
+  <polyline points="86,392 196,270 276,316 398,132" fill="none" stroke="url(#arrowGrad)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <polygon points="398,132 348,140 384,178" fill="#7fd8c8"/>
+</svg>

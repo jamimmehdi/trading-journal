@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<meta name="theme-color" content="#0b0e14" />
+<title>PnL Tracker</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>" />
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230b0e14%22/><text x=%2250%22 y=%2266%22 font-size=%2260%22 text-anchor=%22middle%22>📈</text></svg>" />
+<link rel="manifest" href="manifest.json" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="TradePnL" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen">
+    <div class="auth-logo">Trade<span>PnL</span></div>
+    <div class="auth-sub">Your personal trading journal</div>
+
+    <div>
+      <label>Email</label>
+      <input type="email" id="auth-email" autocomplete="email" placeholder="you@example.com" />
+      <label>Password</label>
+      <input type="password" id="auth-password" autocomplete="current-password" placeholder="••••••••" />
+      <div class="auth-error" id="auth-error"></div>
+      <button class="btn-primary" id="auth-submit-btn" style="margin-top:14px;">Sign In</button>
+      <button class="btn-secondary" id="auth-toggle-btn">Need an account? Sign up</button>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="main-app" class="hidden" style="display:flex; flex-direction:column; min-height:100vh;">
+    <header class="topbar">
+      <h1>Trade<span>PnL</span></h1>
+      <button class="icon-btn" id="logout-btn" title="Sign out">⏻</button>
+    </header>
+
+    <main>
+      <!-- DASHBOARD -->
+      <section id="page-dashboard" class="page">
+        <div class="stat-grid">
+          <div class="stat-card wide">
+            <div class="label">Total P&amp;L</div>
+            <div class="value" id="stat-total-pnl">$0.00</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Win Rate</div>
+            <div class="value" id="stat-win-rate">0%</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Trades</div>
+            <div class="value" id="stat-trade-count">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Avg Win</div>
+            <div class="value pos" id="stat-avg-win">$0.00</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Avg Loss</div>
+            <div class="value neg" id="stat-avg-loss">$0.00</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Profit Factor</div>
+            <div class="value" id="stat-profit-factor">0.00</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Open Trades</div>
+            <div class="value" id="stat-open-count">0</div>
+          </div>
+        </div>
+
+        <div class="section-title">Equity Curve</div>
+        <canvas id="equity-chart"></canvas>
+
+        <div class="section-title">Recent Trades</div>
+        <div class="trade-list" id="recent-trade-list"></div>
+      </section>
+
+      <!-- TRADES LIST -->
+      <section id="page-trades" class="page hidden">
+        <input type="search" id="search-input" placeholder="Search symbol or notes…" />
+        <div class="filter-row" id="filter-row">
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="open">Open</button>
+          <button class="chip" data-filter="closed">Closed</button>
+          <button class="chip" data-filter="win">Wins</button>
+          <button class="chip" data-filter="loss">Losses</button>
+        </div>
+        <div class="trade-list" id="full-trade-list"></div>
+      </section>
+
+      <!-- ADD/EDIT FORM -->
+      <section id="page-form" class="page form-page hidden">
+        <input type="hidden" id="trade-id" />
+
+        <label>Symbol</label>
+        <select id="f-symbol-preset">
+          <option value="BTC">BTC — Bitcoin</option>
+          <option value="ETH">ETH — Ethereum</option>
+          <option value="SOL">SOL — Solana</option>
+          <option value="XAU">XAU — Gold</option>
+          <option value="__custom__">Other (type manually)…</option>
+        </select>
+        <input type="text" id="f-symbol" placeholder="e.g. RELIANCE, NIFTY" autocapitalize="characters" style="margin-top:8px;" />
+
+        <label>Side</label>
+        <div class="segmented" id="side-toggle">
+          <button type="button" data-value="long" class="active long">Long</button>
+          <button type="button" data-value="short" class="short">Short</button>
+        </div>
+
+        <label>Status</label>
+        <div class="segmented" id="status-toggle">
+          <button type="button" data-value="closed" class="active closed">Closed</button>
+          <button type="button" data-value="open" class="open">Open</button>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>Entry Price</label>
+            <input type="number" inputmode="decimal" step="any" id="f-entry-price" placeholder="0.00" />
+          </div>
+          <div>
+            <label>Exit Price</label>
+            <input type="number" inputmode="decimal" step="any" id="f-exit-price" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>Investment (₹)</label>
+            <input type="number" inputmode="decimal" step="any" id="f-investment" placeholder="0.00" />
+          </div>
+          <div>
+            <label>Leverage</label>
+            <input type="number" inputmode="decimal" step="any" min="1" id="f-leverage" placeholder="1" value="1" />
+          </div>
+        </div>
+
+        <label>Fee Currency</label>
+        <div class="segmented" id="fee-currency-toggle">
+          <button type="button" data-value="INR" class="active closed">INR</button>
+          <button type="button" data-value="USD" class="open">USD</button>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>Maker Fee</label>
+            <input type="number" inputmode="decimal" step="any" id="f-maker-fee" placeholder="0.00" />
+          </div>
+          <div>
+            <label>Taker Fee</label>
+            <input type="number" inputmode="decimal" step="any" id="f-taker-fee" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div class="calc-preview" style="margin-top:8px;">
+          <div class="label">Total Fees (₹)</div>
+          <div class="value" id="fee-total-preview">₹0.00</div>
+          <div id="fee-rate-note" style="font-size:11px;color:var(--text-dim);margin-top:4px;"></div>
+        </div>
+
+        <div class="row2">
+          <div>
+            <label>Entry Date</label>
+            <input type="date" id="f-entry-date" />
+          </div>
+          <div>
+            <label>Exit Date</label>
+            <input type="date" id="f-exit-date" />
+          </div>
+        </div>
+
+        <label>Notes</label>
+        <textarea id="f-notes" rows="3" placeholder="Setup, reasoning, mistakes…"></textarea>
+
+        <div class="calc-preview">
+          <div class="label">Estimated P&amp;L</div>
+          <div class="value" id="calc-pnl-preview">₹0.00</div>
+          <div class="pnl-pct" id="calc-pnl-pct-preview" style="margin-top:4px;"></div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-danger hidden" id="delete-trade-btn">🗑</button>
+          <button class="btn-primary" id="save-trade-btn">Save Trade</button>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-page="dashboard">
+        <span class="nav-icon">📊</span>Dashboard
+      </button>
+      <button class="nav-btn" data-page="trades">
+        <span class="nav-icon">📋</span>Trades
+      </button>
+      <button class="nav-btn" data-page="form">
+        <span class="nav-icon">➕</span>Add
+      </button>
+    </nav>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

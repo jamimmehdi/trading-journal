@@ -11,7 +11,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="TradePnL" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -37,43 +36,40 @@
   <div id="main-app" class="hidden" style="display:flex; flex-direction:column; min-height:100vh;">
     <header class="topbar">
       <h1>Trade<span>PnL</span></h1>
-      <button class="icon-btn" id="logout-btn" title="Sign out"><i class="ti ti-logout" aria-hidden="true"></i></button>
+      <button class="icon-btn" id="logout-btn" title="Sign out">⏻</button>
     </header>
 
     <main>
-      <div class="pull-indicator" id="pull-indicator"><i class="ti ti-refresh" aria-hidden="true"></i></div>
       <!-- DASHBOARD -->
       <section id="page-dashboard" class="page">
-        <div class="hero-card">
-          <div class="hero-label">Total P&amp;L</div>
-          <div class="hero-value" id="stat-total-pnl">₹0.00</div>
-          <div class="hero-sub" id="hero-sub-stats">0% win rate · 0 trades</div>
-        </div>
-
         <div class="stat-grid">
+          <div class="stat-card wide">
+            <div class="label">Total P&amp;L</div>
+            <div class="value" id="stat-total-pnl">$0.00</div>
+          </div>
           <div class="stat-card">
             <div class="label">Win Rate</div>
             <div class="value" id="stat-win-rate">0%</div>
           </div>
           <div class="stat-card">
-            <div class="label">Open Trades</div>
-            <div class="value" id="stat-open-count">0</div>
+            <div class="label">Trades</div>
+            <div class="value" id="stat-trade-count">0</div>
           </div>
           <div class="stat-card">
             <div class="label">Avg Win</div>
-            <div class="value pos" id="stat-avg-win">₹0.00</div>
+            <div class="value pos" id="stat-avg-win">$0.00</div>
           </div>
           <div class="stat-card">
             <div class="label">Avg Loss</div>
-            <div class="value neg" id="stat-avg-loss">₹0.00</div>
+            <div class="value neg" id="stat-avg-loss">$0.00</div>
           </div>
           <div class="stat-card">
             <div class="label">Profit Factor</div>
             <div class="value" id="stat-profit-factor">0.00</div>
           </div>
           <div class="stat-card">
-            <div class="label">Closed Trades</div>
-            <div class="value" id="stat-trade-count">0</div>
+            <div class="label">Open Trades</div>
+            <div class="value" id="stat-open-count">0</div>
           </div>
         </div>
 
@@ -184,22 +180,21 @@
         </div>
 
         <div class="form-actions">
-          <button class="btn-danger hidden" id="delete-trade-btn"><i class="ti ti-trash" aria-hidden="true"></i></button>
+          <button class="btn-danger hidden" id="delete-trade-btn">🗑</button>
           <button class="btn-primary" id="save-trade-btn">Save Trade</button>
         </div>
       </section>
     </main>
 
-    <div class="fab-wrap">
-      <button class="fab" id="fab-add" aria-label="Add trade"><i class="ti ti-plus" aria-hidden="true"></i></button>
-    </div>
-
     <nav class="bottom-nav">
       <button class="nav-btn active" data-page="dashboard">
-        <i class="ti ti-chart-bar nav-icon" aria-hidden="true"></i>Dashboard
+        <span class="nav-icon">📊</span>Dashboard
       </button>
       <button class="nav-btn" data-page="trades">
-        <i class="ti ti-list nav-icon" aria-hidden="true"></i>Trades
+        <span class="nav-icon">📋</span>Trades
+      </button>
+      <button class="nav-btn" data-page="form">
+        <span class="nav-icon">➕</span>Add
       </button>
     </nav>
   </div>

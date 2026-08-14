@@ -149,11 +149,14 @@ document.querySelectorAll(".nav-btn").forEach((btn) => {
   btn.addEventListener("click", () => showPage(btn.dataset.page));
 });
 
+$("fab-add").addEventListener("click", () => showPage("form"));
+
 function showPage(name) {
   document.querySelectorAll(".page").forEach((p) => p.classList.add("hidden"));
   document.querySelectorAll(".nav-btn").forEach((b) => b.classList.remove("active"));
   $(`page-${name}`).classList.remove("hidden");
-  document.querySelector(`.nav-btn[data-page="${name}"]`).classList.add("active");
+  const navBtn = document.querySelector(`.nav-btn[data-page="${name}"]`);
+  if (navBtn) navBtn.classList.add("active");
   if (name === "form" && !editingId) resetForm();
   document.querySelector("main").scrollTop = 0;
 }
@@ -190,7 +193,8 @@ function renderDashboard() {
   const openCount = allTrades.filter((t) => t.status === "open").length;
 
   $("stat-total-pnl").textContent = fmtMoney(totalPnl);
-  $("stat-total-pnl").className = "value " + (totalPnl >= 0 ? "pos" : "neg");
+  $("stat-total-pnl").className = "hero-value " + (totalPnl >= 0 ? "pos" : "neg");
+  $("hero-sub-stats").textContent = `${winRate.toFixed(1)}% win rate · ${closed.length} trades`;
   $("stat-win-rate").textContent = winRate.toFixed(1) + "%";
   $("stat-trade-count").textContent = closed.length;
   $("stat-avg-win").textContent = fmtMoney(avgWin);
@@ -303,24 +307,28 @@ function renderTradeCards(container, trades) {
   trades.forEach((t) => {
     const pnl = computePnl(t);
     const pnlPct = computePnlPct(t);
+    const accentColor = pnl == null ? "var(--border)" : pnl >= 0 ? "var(--green)" : "var(--red)";
     const card = document.createElement("div");
     card.className = "trade-card";
     card.innerHTML = `
-      <div class="left">
-        <div class="symbol">
-          ${t.symbol}
-          <span class="side-badge ${t.side}">${t.side.toUpperCase()}</span>
-          ${t.status === "open" ? '<span class="status-badge">OPEN</span>' : ""}
+      <div class="trade-accent" style="background:${accentColor}"></div>
+      <div class="trade-body">
+        <div class="left">
+          <div class="symbol">
+            ${t.symbol}
+            <span class="side-badge ${t.side}">${t.side.toUpperCase()}</span>
+            ${t.status === "open" ? '<span class="status-badge">OPEN</span>' : ""}
+          </div>
+          <div class="meta">${fmtMoney(Number(t.investment_amount))} · ${Number(t.leverage) || 1}x @ ${fmtMoney(Number(t.entry_price))} · ${t.entry_date}</div>
         </div>
-        <div class="meta">${fmtMoney(Number(t.investment_amount))} · ${Number(t.leverage) || 1}x @ ${fmtMoney(Number(t.entry_price))} · ${t.entry_date}</div>
-      </div>
-      <div class="right">
-        ${
-          pnl == null
-            ? '<div class="meta">—</div>'
-            : `<div class="pnl ${pnl >= 0 ? "pos" : "neg"}">${fmtMoney(pnl)}</div>
-               <div class="pnl-pct">${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(2)}%</div>`
-        }
+        <div class="right">
+          ${
+            pnl == null
+              ? '<div class="meta">—</div>'
+              : `<div class="pnl ${pnl >= 0 ? "pos" : "neg"}">${fmtMoney(pnl)}</div>
+                 <div class="pnl-pct">${pnlPct >= 0 ? "+" : ""}${pnlPct.toFixed(2)}%</div>`
+          }
+        </div>
       </div>
     `;
     card.addEventListener("click", () => openEditForm(t));
@@ -545,3 +553,62 @@ $("delete-trade-btn").addEventListener("click", async () => {
 });
 
 resetForm();
+
+// ---------- pull to refresh ----------
+(function setupPullToRefresh() {
+  const main = document.querySelector("main");
+  const indicator = $("pull-indicator");
+  const THRESHOLD = 70;
+  let startY = null;
+  let pulling = false;
+  let refreshing = false;
+
+  main.addEventListener(
+    "touchstart",
+    (e) => {
+      if (main.scrollTop <= 0 && !refreshing) {
+        startY = e.touches[0].clientY;
+        pulling = true;
+      }
+    },
+    { passive: true }
+  );
+
+  main.addEventListener(
+    "touchmove",
+    (e) => {
+      if (!pulling || refreshing) return;
+      const dy = e.touches[0].clientY - startY;
+      if (dy > 0 && main.scrollTop <= 0) {
+        e.preventDefault();
+        const pull = Math.min(dy * 0.5, 90);
+        indicator.style.transform = `translate(-50%, ${pull - 40}px)`;
+        indicator.style.opacity = String(Math.min(pull / THRESHOLD, 1));
+        indicator.classList.toggle("ready", pull > THRESHOLD);
+      } else {
+        pulling = false;
+      }
+    },
+    { passive: false }
+  );
+
+  main.addEventListener("touchend", async () => {
+    if (!pulling || refreshing) {
+      pulling = false;
+      return;
+    }
+    pulling = false;
+    const isReady = indicator.classList.contains("ready");
+    if (isReady) {
+      refreshing = true;
+      indicator.classList.add("loading");
+      indicator.style.transform = "translate(-50%, 30px)";
+      indicator.style.opacity = "1";
+      await loadTrades();
+      refreshing = false;
+    }
+    indicator.classList.remove("loading", "ready");
+    indicator.style.transform = "translate(-50%, -40px)";
+    indicator.style.opacity = "0";
+  });
+})();

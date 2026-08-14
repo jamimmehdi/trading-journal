@@ -173,10 +173,18 @@
         </div>
 
         <label>Entry Date</label>
-        <input type="date" id="f-entry-date" />
+        <div class="date-field">
+          <div class="date-field-label" id="f-entry-date-label">Select date</div>
+          <svg class="date-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
+          <input type="date" id="f-entry-date" class="date-field-input" />
+        </div>
 
         <label>Exit Date</label>
-        <input type="date" id="f-exit-date" />
+        <div class="date-field">
+          <div class="date-field-label" id="f-exit-date-label">Select date</div>
+          <svg class="date-field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
+          <input type="date" id="f-exit-date" class="date-field-input" />
+        </div>
 
         <label>Notes</label>
         <textarea id="f-notes" rows="3" placeholder="Setup, reasoning, mistakes…"></textarea>

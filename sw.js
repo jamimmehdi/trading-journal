@@ -1,4 +1,4 @@
-const CACHE_NAME = "tradepnl-v2";
+const CACHE_NAME = "tradepnl-v3";
 const APP_SHELL = [
   "./",
   "./index.html",

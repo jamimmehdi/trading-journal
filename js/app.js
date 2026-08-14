@@ -20,6 +20,20 @@ const inrFormatter = new Intl.NumberFormat("en-IN", {
 const fmtMoney = (n) => (n < 0 ? "-" : "") + inrFormatter.format(Math.abs(n));
 const todayStr = () => new Date().toISOString().slice(0, 10);
 const SYMBOL_PRESETS = ["BTC", "ETH", "SOL", "XAU"];
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function formatDateLabel(value) {
+  if (!value) return "Select date";
+  const [y, m, d] = value.split("-").map(Number);
+  return `${d} ${MONTH_NAMES[m - 1]} ${y}`;
+}
+
+function syncDateLabel(inputId, labelId) {
+  const input = $(inputId);
+  const label = $(labelId);
+  label.textContent = formatDateLabel(input.value);
+  label.classList.toggle("muted", !input.value);
+}
 
 function toast(msg) {
   const t = $("toast");
@@ -368,6 +382,8 @@ function resetForm() {
   $("fee-rate-note").textContent = "";
   $("f-entry-date").value = todayStr();
   $("f-exit-date").value = "";
+  syncDateLabel("f-entry-date", "f-entry-date-label");
+  syncDateLabel("f-exit-date", "f-exit-date-label");
   $("f-notes").value = "";
   setSegment("side-toggle", "long");
   setSegment("status-toggle", "closed");
@@ -389,6 +405,8 @@ function openEditForm(t) {
   $("fee-rate-note").textContent = "";
   $("f-entry-date").value = t.entry_date;
   $("f-exit-date").value = t.exit_date ?? "";
+  syncDateLabel("f-entry-date", "f-entry-date-label");
+  syncDateLabel("f-exit-date", "f-exit-date-label");
   $("f-notes").value = t.notes ?? "";
   setSegment("side-toggle", t.side);
   setSegment("status-toggle", t.status);
@@ -428,6 +446,9 @@ $("fee-currency-toggle").addEventListener("click", async (e) => {
 ["f-entry-price", "f-exit-price", "f-investment", "f-leverage"].forEach((id) => {
   $(id).addEventListener("input", updatePnlPreview);
 });
+
+$("f-entry-date").addEventListener("change", () => syncDateLabel("f-entry-date", "f-entry-date-label"));
+$("f-exit-date").addEventListener("change", () => syncDateLabel("f-exit-date", "f-exit-date-label"));
 
 function computeFeeSum() {
   const maker = Number($("f-maker-fee").value) || 0;

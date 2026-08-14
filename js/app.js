@@ -190,7 +190,8 @@ function renderDashboard() {
   const openCount = allTrades.filter((t) => t.status === "open").length;
 
   $("stat-total-pnl").textContent = fmtMoney(totalPnl);
-  $("stat-total-pnl").className = "value " + (totalPnl >= 0 ? "pos" : "neg");
+  $("stat-total-pnl").className = "hero-value " + (totalPnl >= 0 ? "pos" : "neg");
+  $("hero-sub-stats").textContent = `${winRate.toFixed(1)}% win rate · ${closed.length} trades`;
   $("stat-win-rate").textContent = winRate.toFixed(1) + "%";
   $("stat-trade-count").textContent = closed.length;
   $("stat-avg-win").textContent = fmtMoney(avgWin);
@@ -303,16 +304,14 @@ function renderTradeCards(container, trades) {
   trades.forEach((t) => {
     const pnl = computePnl(t);
     const pnlPct = computePnlPct(t);
+    const dotColor = pnl == null ? "var(--text-dim)" : pnl >= 0 ? "var(--green)" : "var(--red)";
     const card = document.createElement("div");
     card.className = "trade-card";
     card.innerHTML = `
-      <div class="left">
-        <div class="symbol">
-          ${t.symbol}
-          <span class="side-badge ${t.side}">${t.side.toUpperCase()}</span>
-          ${t.status === "open" ? '<span class="status-badge">OPEN</span>' : ""}
-        </div>
-        <div class="meta">${fmtMoney(Number(t.investment_amount))} · ${Number(t.leverage) || 1}x @ ${fmtMoney(Number(t.entry_price))} · ${t.entry_date}</div>
+      <div class="trade-dot" style="background:${dotColor}"></div>
+      <div class="trade-main">
+        <div class="trade-title">${t.symbol} · ${Number(t.leverage) || 1}x ${t.side}${t.status === "open" ? " · open" : ""}</div>
+        <div class="meta">${t.entry_date}</div>
       </div>
       <div class="right">
         ${

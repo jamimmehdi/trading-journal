@@ -42,41 +42,44 @@
     <main>
       <!-- DASHBOARD -->
       <section id="page-dashboard" class="page">
-        <div class="stat-grid">
-          <div class="stat-card wide">
-            <div class="label">Total P&amp;L</div>
-            <div class="value" id="stat-total-pnl">$0.00</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Win Rate</div>
+        <div class="hero-card">
+          <div class="hero-label">Total P&amp;L</div>
+          <div class="hero-value" id="stat-total-pnl">₹0.00</div>
+          <div class="hero-sub" id="hero-sub-stats">0% win rate · 0 trades</div>
+          <canvas id="equity-chart"></canvas>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat-row-item">
             <div class="value" id="stat-win-rate">0%</div>
+            <div class="label">Win Rate</div>
           </div>
-          <div class="stat-card">
-            <div class="label">Trades</div>
+          <div class="stat-row-item">
             <div class="value" id="stat-trade-count">0</div>
+            <div class="label">Trades</div>
           </div>
-          <div class="stat-card">
-            <div class="label">Avg Win</div>
-            <div class="value pos" id="stat-avg-win">$0.00</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Avg Loss</div>
-            <div class="value neg" id="stat-avg-loss">$0.00</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Profit Factor</div>
+          <div class="stat-row-item">
             <div class="value" id="stat-profit-factor">0.00</div>
-          </div>
-          <div class="stat-card">
-            <div class="label">Open Trades</div>
-            <div class="value" id="stat-open-count">0</div>
+            <div class="label">Profit Factor</div>
           </div>
         </div>
 
-        <div class="section-title">Equity Curve</div>
-        <canvas id="equity-chart"></canvas>
+        <div class="stat-row">
+          <div class="stat-row-item">
+            <div class="value pos" id="stat-avg-win">₹0.00</div>
+            <div class="label">Avg Win</div>
+          </div>
+          <div class="stat-row-item">
+            <div class="value neg" id="stat-avg-loss">₹0.00</div>
+            <div class="label">Avg Loss</div>
+          </div>
+          <div class="stat-row-item">
+            <div class="value" id="stat-open-count">0</div>
+            <div class="label">Open Trades</div>
+          </div>
+        </div>
 
-        <div class="section-title">Recent Trades</div>
+        <div class="section-title">Positions</div>
         <div class="trade-list" id="recent-trade-list"></div>
       </section>
 
@@ -188,13 +191,16 @@
 
     <nav class="bottom-nav">
       <button class="nav-btn active" data-page="dashboard">
-        <span class="nav-icon">📊</span>Dashboard
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="20" x2="4" y2="14"/><line x1="12" y1="20" x2="12" y2="8"/><line x1="20" y1="20" x2="20" y2="4"/></svg>
+        Dashboard
       </button>
       <button class="nav-btn" data-page="trades">
-        <span class="nav-icon">📋</span>Trades
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4.5" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r="1.3" fill="currentColor" stroke="none"/></svg>
+        Trades
       </button>
       <button class="nav-btn" data-page="form">
-        <span class="nav-icon">➕</span>Add
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Add
       </button>
     </nav>
   </div>

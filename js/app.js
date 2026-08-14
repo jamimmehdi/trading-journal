@@ -134,6 +134,7 @@ $("logout-btn").addEventListener("click", async () => {
 
 sb.auth.onAuthStateChange((_event, session) => {
   currentUser = session?.user || null;
+  $("splash-screen").classList.add("hidden");
   if (currentUser) {
     $("auth-screen").classList.add("hidden");
     $("main-app").classList.remove("hidden");
